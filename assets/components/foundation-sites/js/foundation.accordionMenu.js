@@ -172,15 +172,7 @@ class AccordionMenu {
    * @function
    */
   hideAll() {
-    this.up(this.$element.find('[data-submenu]'));
-  }
-
-  /**
-   * Opens all panes of the menu.
-   * @function
-   */
-  showAll() {
-    this.down(this.$element.find('[data-submenu]'));
+    this.$element.find('[data-submenu]').slideUp(this.options.slideSpeed);
   }
 
   /**
@@ -264,15 +256,13 @@ AccordionMenu.defaults = {
   /**
    * Amount of time to animate the opening of a submenu in ms.
    * @option
-   * @type {number}
-   * @default 250
+   * @example 250
    */
   slideSpeed: 250,
   /**
    * Allow the menu to have multiple open panes.
    * @option
-   * @type {boolean}
-   * @default true
+   * @example true
    */
   multiOpen: true
 };

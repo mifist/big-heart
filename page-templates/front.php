@@ -57,47 +57,32 @@ get_header(); ?>
 <?php do_action( 'foundationpress_after_content' ); ?>
 
 <div class="section-divider">
-	<hr />
+	<ul class="accordion" data-accordion="vasuer-accordion" role="tablist">
+		<li class="accordion-item" data-accordion-item="">
+			<a href="#" class="accordion-title" aria-controls="rfezm6-accordion" role="tab" id="rfezm6-accordion-label" aria-expanded="false" aria-selected="false">Accordion 1</a>
+			<div class="accordion-content" data-tab-content="" role="tabpanel" aria-labelledby="rfezm6-accordion-label" aria-hidden="true" id="rfezm6-accordion" style="display: none;">
+				<p>Panel 1. Lorem ipsum dolor</p>
+				<a href="#">Nowhere to Go</a>
+			</div>
+		</li>
+		<li class="accordion-item" data-accordion-item="">
+			<a href="#" class="accordion-title" aria-controls="g279ym-accordion" role="tab" id="g279ym-accordion-label" aria-expanded="false" aria-selected="false">Accordion 2</a>
+			<div class="accordion-content" data-tab-content="" role="tabpanel" aria-labelledby="g279ym-accordion-label" aria-hidden="true" id="g279ym-accordion" style="display: none;">
+				<textarea></textarea>
+				<button class="button">I do nothing!</button>
+			</div>
+		</li>
+		<li class="accordion-item is-active" data-accordion-item="">
+			<a href="#" class="accordion-title" aria-controls="zi8mzy-accordion" role="tab" id="zi8mzy-accordion-label" aria-expanded="true" aria-selected="true">Accordion 3</a>
+			<div class="accordion-content" data-tab-content="" role="tabpanel" aria-labelledby="zi8mzy-accordion-label" aria-hidden="false" id="zi8mzy-accordion" style="display: block;">
+				Pick a date!
+				<input type="date">
+			</div>
+		</li>
+	</ul>
 </div>
 
 
-<section class="benefits">
-	<header>
-		<h2>Build Foundation based sites, powered by WordPress</h2>
-		<h4>Foundation is the professional choice for designers, developers and teams. <br /> WordPress is by far, <a href="http://trends.builtwith.com/cms">the world's most popular CMS</a> (currently powering 38% of the web).</h4>
-	</header>
-
-	<div class="semantic">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/demo/semantic.svg" alt="semantic">
-		<h3>Semantic</h3>
-		<p>Everything is semantic. You can have the cleanest markup without sacrificing the utility and speed of Foundation.</p>
-	</div>
-
-	<div class="responsive">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/demo/responsive.svg" alt="responsive">
-		<h3>Responsive</h3>
-		<p>You can build for small devices first. Then, as devices get larger and larger, layer in more complexity for a complete responsive design.</p>
-
-	</div>
-
-	<div class="customizable">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/demo/customizable.svg" alt="customizable">
-		<h3>Customizable</h3>
-		<p>You can customize your build to include or remove certain elements, as well as define the size of columns, colors, font size and more.</p>
-
-	</div>
-
-	<div class="professional">
-		<img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/demo/professional.svg" alt="professional">
-		<h3>Professional</h3>
-		<p>Millions of designers and developers depend on Foundation. We have business support, training and consulting to help grow your product or service.</p>
-	</div>
-
-	<div class="why-foundation">
-		<a href="/kitchen-sink">See what's in Foundation out of the box →</a>
-	</div>
-
-</section>
 
 
 

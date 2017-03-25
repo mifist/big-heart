@@ -30,17 +30,13 @@ $button-background-hover: scale-color($button-background, $lightness: -15%) !def
 /// @type List
 $button-color: $white !default;
 
-/// Alternative font color for buttons.
+/// Font color for buttons, if the background is light.
 /// @type List
 $button-color-alt: $black !default;
 
 /// Border radius for buttons, defaulted to global-radius.
 /// @type Number
 $button-radius: $global-radius !default;
-
-/// Border width for hollow outline buttons
-/// @type Number
-$button-hollow-border-width: 1px !default;
 
 /// Sizes for buttons.
 /// @type Map
@@ -50,10 +46,6 @@ $button-sizes: (
   default: 0.9rem,
   large: 1.25rem,
 ) !default;
-
-/// Coloring classes. A map of classes to output in your CSS, like `.secondary`, `.success`, and so on.
-/// @type Map
-$button-palette: $foundation-palette !default;
 
 /// opacity for a disabled button.
 /// @type List
@@ -72,37 +64,21 @@ $button-hollow-hover-lightness: -50% !default;
   $button-margin: 0 0 $global-margin $global-margin !default;
 }
 
-/// transitions for buttons.
-/// @type List
-$button-transition: background-color 0.25s ease-out, color 0.25s ease-out !default;
-
 // TODO: Document button-base() mixin
 @mixin button-base {
   @include disable-mouse-outline;
   display: inline-block;
-  vertical-align: middle;
-  margin: $button-margin;
-
-  @if (type-of($button-padding) == 'map') {
-    @each $size, $padding in $button-padding {
-      @include breakpoint($size) {
-        padding: $padding;
-      }
-    }
-  }
-  @else {
-    padding: $button-padding;
-  }
-
+  text-align: center;
+  line-height: 1;
+  cursor: pointer;
   -webkit-appearance: none;
+  transition: background-color 0.25s ease-out, color 0.25s ease-out;
+  vertical-align: middle;
   border: 1px solid transparent;
   border-radius: $button-radius;
-  transition: $button-transition;
-
+  padding: $button-padding;
+  margin: $button-margin;
   font-size: map-get($button-sizes, default);
-  line-height: 1;
-  text-align: center;
-  cursor: pointer;
 }
 
 /// Expands a button to make it full-width.
@@ -111,8 +87,8 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
   @if $expand {
     display: block;
     width: 100%;
-    margin-right: 0;
     margin-left: 0;
+    margin-right: 0;
   }
   @else {
     display: inline-block;
@@ -132,7 +108,7 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
   $background-hover-lightness: $button-background-hover-lightness
 ) {
   @if $color == auto {
-    $color: color-pick-contrast($background, ($button-color, $button-color-alt));
+    $color: foreground($background, $button-color-alt, $button-color);
   }
 
   @if $background-hover == auto {
@@ -158,12 +134,11 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
 
 @mixin button-hollow-style(
   $color: $primary-color,
-  $hover-lightness: $button-hollow-hover-lightness, 
-  $border-width: $button-hollow-border-width
+  $hover-lightness: $button-hollow-hover-lightness
 ) {
   $color-hover: scale-color($color, $lightness: $hover-lightness);
 
-  border: $border-width solid $color;
+  border: 1px solid $color;
   color: $color;
 
   &:hover, &:focus {
@@ -173,22 +148,13 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
 }
 
 /// Adds disabled styles to a button by fading the element, reseting the cursor, and disabling pointer events.
-/// @param [Color] $background [$primary-color] - Background color of the disabled button.
-/// @param [Color] $color [$button-color] - Text color of the disabled button. Set to `auto` to have the mixin automatically generate a color based on the background color.
-@mixin button-disabled(
-  $background: $primary-color,
-  $color: $button-color
-) {
-  @if $color == auto {
-    $color: color-pick-contrast($background, ($button-color, $button-color-alt));
-  }
-
+@mixin button-disabled($color: $primary-color) {
   opacity: $button-opacity-disabled;
   cursor: not-allowed;
 
-  &, &:hover, &:focus {
-    background-color: $background;
-    color: $color;
+  &:hover, &:focus {
+    background-color: $color;
+    color: $button-color;
   }
 }
 
@@ -205,10 +171,9 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
     @include css-triangle($size, $color, down);
     position: relative;
     top: 0.4em; // Aligns the arrow with the text of the button
-
-    display: inline-block;
     float: #{$global-right};
     margin-#{$global-left}: get-side($button-padding, right);
+    display: inline-block;
   }
 }
 
@@ -254,7 +219,7 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
     &.expanded { @include button-expand; }
 
     // Colors
-    @each $name, $color in $button-palette {
+    @each $name, $color in $foundation-palette {
       @if $button-fill != hollow {
         &.#{$name} {
           @include button-style($color, auto, auto);
@@ -277,7 +242,7 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
         @include button-hollow;
         @include button-hollow-style;
 
-        @each $name, $color in $button-palette {
+        @each $name, $color in $foundation-palette {
           &.#{$name} {
             @include button-hollow-style($color);
           }
@@ -290,9 +255,9 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
     &[disabled] {
       @include button-disabled;
 
-      @each $name, $color in $button-palette {
+      @each $name, $color in $foundation-palette {
         &.#{$name} {
-          @include button-disabled($color, auto);
+          @include button-disabled($color);
         }
       }
     }
@@ -306,27 +271,13 @@ $button-transition: background-color 0.25s ease-out, color 0.25s ease-out !defau
           border-top-color: $button-background;
         }
       }
-
-      &.hollow {
-        &::after {
-          border-top-color: $button-background;
-        }
-
-        @each $name, $color in $button-palette {
-          &.#{$name} {
-            &::after {
-              border-top-color: $color;
-            }
-          }
-        }
-      }
     }
 
     // Button with dropdown arrow only
     &.arrow-only::after {
-      top: -0.1em;
-      float: none;
       margin-#{$global-left}: 0;
+      float: none;
+      top: -0.1em;
     }
   }
 }

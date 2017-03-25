@@ -19,9 +19,6 @@ typography:
 button:
   sass: button
 
-card:
-  sass: card
-
 forms:
   sass: forms
 
@@ -92,6 +89,9 @@ equalizer:
     - mediaQuery
     - timerAndImageLoader
 
+flex_video:
+  sass: flex-video
+
 interchange:
   js: interchange
   js_utils:
@@ -137,9 +137,6 @@ progress_bar:
 progress_element:
   sass: progress-element
 
-responsive_embed:
-  sass: responsive-embed
-
 responsive_menu:
   js: responsiveMenu
   js_utils:
@@ -159,7 +156,6 @@ slider:
   js: slider
   js_utils:
     - box
-    - touch
     - motion
     - triggers
     - mediaQuery
@@ -171,9 +167,6 @@ sticky:
   js_utils:
     - triggers
     - mediaQuery
-
-responsive_accordion_tabs:
-  js: zf.responsiveAccordionTabs
 
 reveal:
   sass: reveal

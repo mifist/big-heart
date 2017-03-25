@@ -16,11 +16,14 @@
 // WP overrides
 @import "global/wp-admin"; // Fix issues with wp-admin bar positioning
 @import "global/wp-overrides"; // Override the default WordPress styling for some elements
-@import "global/accessibility";
 
 // Third-party libraries
-@import '../components/fontawesome';
-@import '../components/motion-ui';
+// @import '../components/fontawesome/scss/font-awesome';
+// @import '../components/motion-ui/src/motion-ui';
+
+
+
+// @import 'motion-ui';
 
 // Foundation global styles
 @include foundation-global-styles;
@@ -29,28 +32,29 @@
 @include foundation-grid;
 // @include foundation-flex-grid;
 @include foundation-typography;
-@include foundation-forms;
 @include foundation-button;
+@include foundation-forms;
+@include foundation-range-input;
 @include foundation-accordion;
 @include foundation-accordion-menu;
 @include foundation-badge;
 @include foundation-breadcrumbs;
 @include foundation-button-group;
 @include foundation-callout;
-@include foundation-card;
 @include foundation-close-button;
-@include foundation-menu;
-@include foundation-menu-icon;
 @include foundation-drilldown-menu;
 @include foundation-dropdown;
 @include foundation-dropdown-menu;
-@include foundation-responsive-embed;
+@include foundation-flex-video;
 @include foundation-label;
 @include foundation-media-object;
+@include foundation-menu;
 @include foundation-off-canvas;
 @include foundation-orbit;
 @include foundation-pagination;
 @include foundation-progress-bar;
+@include foundation-progress-element;
+@include foundation-meter-element;
 @include foundation-slider;
 @include foundation-sticky;
 @include foundation-reveal;
@@ -63,16 +67,19 @@
 @include foundation-top-bar;
 @include foundation-visibility-classes;
 @include foundation-float-classes;
+@include foundation-menu-icon;
 // @include foundation-flex-classes;
 
 // Motion UI
-@include motion-ui-transitions;
-@include motion-ui-animations;
+// @include motion-ui-transitions;
+// @include motion-ui-animations;
 
 /*
   My custom styles:
   Add your scss files below to structure your project styles
 */
+
+@import "main";
 
 // Modules
 @import "modules/navigation";
@@ -82,10 +89,11 @@
 
 // Components
 @import "components/buttons";
-@import "components/cards";
 @import "components/featured-image";
 @import "components/dividers";
 @import "components/links";
+@import "components/slick";
+@import "components/fancybox";
 
 // Templates
 @import "templates/front";
@@ -94,5 +102,3 @@
 @import "templates/page-sidebar-left";
 @import "templates/page-full-width";
 @import "templates/single-post";
-
-@import "main";

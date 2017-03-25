@@ -1,15 +1,15 @@
-//@prepros-prepend ../components/what-input/dist/what-input.min.js
+//@prepros-prepend ../components/what-input/what-input.min.js
 //@prepros-prepend ../components/foundation-sites/js/foundation.core.js
 
 // Utils
-//@prepros-prepend ../components/foundation-sites/js/foundation.util.mediaQuery.js
-//@prepros-prepend ../components/foundation-sites/js/foundation.util.triggers.js
-//@prepros-prepend ../components/foundation-sites/js/foundation.util.box.js
-//@prepros-prepend ../components/foundation-sites/js/foundation.util.keyboard.js
+//@prepros-prepend ../components/foundation-sites/dist/plugins/foundation.util.mediaQuery.js
+//@prepros-prepend ../components/foundation-sites/dist/plugins/foundation.util.triggers.js
+//@prepros-prepend ../components/foundation-sites/dist/plugins/foundation.util.box.js
+//@prepros-prepend ../components/foundation-sites/dist/plugins/foundation.util.keyboard.js
 
 // Paths to individual JS components defined below
 //  @prepros-prepend ../components/foundation-sites/js/foundation.abide.js
-//  @prepros-prepend ../components/foundation-sites/js/foundation.accordion.js
+//@prepros-prepend ../components/foundation-sites/js/foundation.accordion.js
 //  @prepros-prepend ../components/foundation-sites/js/foundation.accordionMenu.js
 //  @prepros-prepend ../components/foundation-sites/js/foundation.drilldown.js
 //@prepros-prepend ../components/foundation-sites/js/foundation.dropdown.js
@@ -32,8 +32,8 @@
 
 // Plugins
 //  @prepros-prepend ./plugins/slick.min.js
-//@prepros-prepend ./plugins/jquery.maskedinput.min.js
 //@prepros-prepend ./plugins/jquery.fancybox.pack.js
+//@prepros-prepend ./plugins/jquery.maskedinput.min.js
 
 // Main JS
 //@prepros-prepend ./main.js

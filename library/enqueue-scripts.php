@@ -63,6 +63,6 @@ add_action('after_setup_theme','footer_enqueue_scripts');*/
 
 function wpmidia_enqueue_masked_input(){
 	wp_enqueue_script( 'fontawesome', 'https://use.fontawesome.com/ae7c834c9a.js', array('jquery'), true );
-	echo '<script>!function ($) { $(document).foundation(); }(window.jQuery); </script>';
+	//echo '<script>!function ($) { $(document).foundation(); }(window.jQuery); </script>';
 }
 add_action('wp_footer', 'wpmidia_enqueue_masked_input');

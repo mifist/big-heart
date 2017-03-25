@@ -43,20 +43,10 @@ class Orbit {
   * @private
   */
   _init() {
-    // @TODO: consider discussion on PR #9278 about DOM pollution by changeSlide
-    this._reset();
-
     this.$wrapper = this.$element.find(`.${this.options.containerClass}`);
     this.$slides = this.$element.find(`.${this.options.slideClass}`);
-
     var $images = this.$element.find('img'),
-        initActive = this.$slides.filter('.is-active'),
-        id = this.$element[0].id || Foundation.GetYoDigits(6, 'orbit');
-
-    this.$element.attr({
-      'data-resize': id,
-      'id': id
-    });
+    initActive = this.$slides.filter('.is-active');
 
     if (!initActive.length) {
       this.$slides.eq(0).addClass('is-active');
@@ -121,7 +111,9 @@ class Orbit {
   */
   _prepareForOrbit() {
     var _this = this;
-    this._setWrapperHeight();
+    this._setWrapperHeight(function(max){
+      _this._setSlideHeight(max);
+    });
   }
 
   /**
@@ -131,13 +123,13 @@ class Orbit {
   * @param {Function} cb - a callback function to fire when complete.
   */
   _setWrapperHeight(cb) {//rewrite this to `for` loop
-    var max = 0, temp, counter = 0, _this = this;
+    var max = 0, temp, counter = 0;
 
     this.$slides.each(function() {
       temp = this.getBoundingClientRect().height;
       $(this).attr('data-slide', counter);
 
-      if (_this.$slides.filter('.is-active')[0] !== _this.$slides.eq(counter)[0]) {//if not the active slide, set css position and display property
+      if (counter) {//if not the first slide, set css position and display property
         $(this).css({'position': 'relative', 'display': 'none'});
       }
       max = temp > max ? temp : max;
@@ -146,7 +138,7 @@ class Orbit {
 
     if (counter === this.$slides.length) {
       this.$wrapper.css({'height': max}); //only change the wrapper height property once.
-      if(cb) {cb(max);} //fire callback with max height dimension.
+      cb(max); //fire callback with max height dimension.
     }
   }
 
@@ -173,10 +165,6 @@ class Orbit {
     //**Now using custom event - thanks to:**
     //**      Yohai Ararat of Toronto      **
     //***************************************
-    //
-    this.$element.off('.resizeme.zf.trigger').on({
-      'resizeme.zf.trigger': this._prepareForOrbit.bind(this)
-    })
     if (this.$slides.length > 1) {
 
       if (this.options.swipe) {
@@ -228,7 +216,7 @@ class Orbit {
           _this.changeSlide(ltr, $slide, idx);
         });
       }
-
+      
       if (this.options.accessible) {
         this.$wrapper.add(this.$bullets).on('keydown.zf.orbit', function(e) {
           // handle keyboard event with keyboard util
@@ -251,44 +239,6 @@ class Orbit {
   }
 
   /**
-   * Resets Orbit so it can be reinitialized
-   */
-  _reset() {
-    // Don't do anything if there are no slides (first run)
-    if (typeof this.$slides == 'undefined') {
-      return;
-    }
-
-    if (this.$slides.length > 1) {
-      // Remove old events
-      this.$element.off('.zf.orbit').find('*').off('.zf.orbit')
-
-      // Restart timer if autoPlay is enabled
-      if (this.options.autoPlay) {
-        this.timer.restart();
-      }
-
-      // Reset all sliddes
-      this.$slides.each(function(el) {
-        $(el).removeClass('is-active is-active is-in')
-          .removeAttr('aria-live')
-          .hide();
-      });
-
-      // Show the first slide
-      this.$slides.first().addClass('is-active').show();
-
-      // Triggers when the slide has finished animating
-      this.$element.trigger('slidechange.zf.orbit', [this.$slides.first()]);
-
-      // Select first bullet if bullets are present
-      if (this.options.bullets) {
-        this._updateBullets(0);
-      }
-    }
-  }
-
-  /**
   * Changes the current slide to a new one.
   * @function
   * @param {Boolean} isLTR - flag if the slide should move left to right.
@@ -297,7 +247,6 @@ class Orbit {
   * @fires Orbit#slidechange
   */
   changeSlide(isLTR, chosenSlide, idx) {
-    if (!this.$slides) {return; } // Don't freak out if we're in the middle of cleanup
     var $curSlide = this.$slides.filter('.is-active').eq(0);
 
     if (/mui/g.test($curSlide[0].className)) { return false; } //if the slide is currently animating, kick out of the function
@@ -324,13 +273,13 @@ class Orbit {
       * @event Orbit#beforeslidechange
       */
       this.$element.trigger('beforeslidechange.zf.orbit', [$curSlide, $newSlide]);
-
+      
       if (this.options.bullets) {
         idx = idx || this.$slides.index($newSlide); //grab index to update bullets
         this._updateBullets(idx);
       }
 
-      if (this.options.useMUI && !this.$element.is(':hidden')) {
+      if (this.options.useMUI) {
         Foundation.Motion.animateIn(
           $newSlide.addClass('is-active').css({'position': 'absolute', 'top': 0}),
           this.options[`animInFrom${dirIn}`],
@@ -391,128 +340,110 @@ Orbit.defaults = {
   /**
   * Tells the JS to look for and loadBullets.
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   bullets: true,
   /**
   * Tells the JS to apply event listeners to nav buttons
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   navButtons: true,
   /**
   * motion-ui animation class to apply
   * @option
-   * @type {string}
-  * @default 'slide-in-right'
+  * @example 'slide-in-right'
   */
   animInFromRight: 'slide-in-right',
   /**
   * motion-ui animation class to apply
   * @option
-   * @type {string}
-  * @default 'slide-out-right'
+  * @example 'slide-out-right'
   */
   animOutToRight: 'slide-out-right',
   /**
   * motion-ui animation class to apply
   * @option
-   * @type {string}
-  * @default 'slide-in-left'
+  * @example 'slide-in-left'
   *
   */
   animInFromLeft: 'slide-in-left',
   /**
   * motion-ui animation class to apply
   * @option
-   * @type {string}
-  * @default 'slide-out-left'
+  * @example 'slide-out-left'
   */
   animOutToLeft: 'slide-out-left',
   /**
   * Allows Orbit to automatically animate on page load.
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   autoPlay: true,
   /**
   * Amount of time, in ms, between slide transitions
   * @option
-   * @type {number}
-  * @default 5000
+  * @example 5000
   */
   timerDelay: 5000,
   /**
   * Allows Orbit to infinitely loop through the slides
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   infiniteWrap: true,
   /**
   * Allows the Orbit slides to bind to swipe events for mobile, requires an additional util library
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   swipe: true,
   /**
   * Allows the timing function to pause animation on hover.
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   pauseOnHover: true,
   /**
   * Allows Orbit to bind keyboard events to the slider, to animate frames with arrow keys
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   accessible: true,
   /**
   * Class applied to the container of Orbit
   * @option
-   * @type {string}
-  * @default 'orbit-container'
+  * @example 'orbit-container'
   */
   containerClass: 'orbit-container',
   /**
   * Class applied to individual slides.
   * @option
-   * @type {string}
-  * @default 'orbit-slide'
+  * @example 'orbit-slide'
   */
   slideClass: 'orbit-slide',
   /**
   * Class applied to the bullet container. You're welcome.
   * @option
-   * @type {string}
-  * @default 'orbit-bullets'
+  * @example 'orbit-bullets'
   */
   boxOfBullets: 'orbit-bullets',
   /**
   * Class applied to the `next` navigation button.
   * @option
-   * @type {string}
-  * @default 'orbit-next'
+  * @example 'orbit-next'
   */
   nextClass: 'orbit-next',
   /**
   * Class applied to the `previous` navigation button.
   * @option
-   * @type {string}
-  * @default 'orbit-previous'
+  * @example 'orbit-previous'
   */
   prevClass: 'orbit-previous',
   /**
   * Boolean to flag the js to use motion ui classes or not. Default to true for backwards compatability.
   * @option
-   * @type {boolean}
-  * @default true
+  * @example true
   */
   useMUI: true
 };

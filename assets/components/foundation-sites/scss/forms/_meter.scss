@@ -32,29 +32,30 @@ $meter-fill-bad: $alert-color !default;
 
 @mixin foundation-meter-element {
   meter {
+    -webkit-appearance: none;
+    -moz-appearance: none;
     display: block;
     width: 100%;
     height: $meter-height;
     margin-bottom: 1rem;
-
-    appearance: none;
 
     @if has-value($meter-radius) {
       border-radius: $meter-radius;
     }
 
     // For Firefox
-    border: 0;
     background: $meter-background;
+    border: 0;
 
     // Chrome/Safari/Edge
     &::-webkit-meter-bar {
-      border: 0;
+      background: $meter-background;
+
       @if has-value($meter-radius) {
         border-radius: $meter-radius;
       }
-
-      background: $meter-background;
+      
+      border: 0;
     }
 
     &::-webkit-meter-inner-element {
@@ -95,15 +96,15 @@ $meter-fill-bad: $alert-color !default;
       }
     }
 
-    &:-moz-meter-optimum::-moz-meter-bar { // sass-lint:disable-line force-pseudo-nesting
+    &:-moz-meter-optimum::-moz-meter-bar {
       background: $meter-fill-good;
     }
 
-    &:-moz-meter-sub-optimum::-moz-meter-bar { // sass-lint:disable-line force-pseudo-nesting
+    &:-moz-meter-sub-optimum::-moz-meter-bar {
       background: $meter-fill-medium;
     }
 
-    &:-moz-meter-sub-sub-optimum::-moz-meter-bar { // sass-lint:disable-line force-pseudo-nesting
+    &:-moz-meter-sub-sub-optimum::-moz-meter-bar {
       background: $meter-fill-bad;
     }
   }

@@ -18,8 +18,8 @@ register_nav_menus(array(
  *
  * @link http://codex.wordpress.org/Function_Reference/wp_nav_menu
  */
-if ( ! function_exists( 'foundationpress_top_bar_r' ) ) {
-	function foundationpress_top_bar_r() {
+if ( ! function_exists( 'foundationpress_header_nav' ) ) {
+	function foundationpress_header_nav() {
 		wp_nav_menu( array(
 			'container'      => false,
 			'menu_class'     => 'dropdown menu',

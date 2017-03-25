@@ -38,22 +38,17 @@ $breadcrumbs-item-uppercase: true !default;
 /// @type Boolean
 $breadcrumbs-item-slash: true !default;
 
-/// Color of breadcrumb slash.
-/// @type Color
-$breadcrumbs-item-slash-color: $medium-gray !default;
-
 /// Adds styles for a breadcrumbs container, along with the styles for the `<li>` and `<a>` elements inside of it.
 @mixin breadcrumbs-container {
   @include clearfix;
-  margin: $breadcrumbs-margin;
   list-style: none;
+  margin: $breadcrumbs-margin;
 
   // Item wrapper
   li {
     float: #{$global-left};
-
-    font-size: $breadcrumbs-item-font-size;
     color: $breadcrumbs-item-color-current;
+    font-size: $breadcrumbs-item-font-size;
     cursor: default;
 
     @if $breadcrumbs-item-uppercase {
@@ -65,12 +60,12 @@ $breadcrumbs-item-slash-color: $medium-gray !default;
       $slash: if($global-text-direction == 'ltr', '/', '\\');
 
       &:not(:last-child)::after {
+        color: $medium-gray;
+        content: $slash;
+        margin: 0 $breadcrumbs-item-margin;
         position: relative;
         top: 1px;
-        margin: 0 $breadcrumbs-item-margin;
         opacity: 1;
-        content: $slash;
-        color: $breadcrumbs-item-slash-color;
       }
     }
     @else {

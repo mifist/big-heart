@@ -59,15 +59,13 @@ function onImagesLoaded(images, callback){
   }
 
   images.each(function() {
-    // Check if image is loaded
-    if (this.complete || (this.readyState === 4) || (this.readyState === 'complete')) {
+    if (this.complete) {
       singleImageLoaded();
     }
-    // Force load the image
+    else if (typeof this.naturalWidth !== 'undefined' && this.naturalWidth > 0) {
+      singleImageLoaded();
+    }
     else {
-      // fix for IE. See https://css-tricks.com/snippets/jquery/fixing-load-in-ie-for-cached-images/
-      var src = $(this).attr('src');
-      $(this).attr('src', src + (src.indexOf('?') >= 0 ? '&' : '?') + (new Date().getTime()));
       $(this).one('load', function() {
         singleImageLoaded();
       });

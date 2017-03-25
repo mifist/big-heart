@@ -6,5 +6,7 @@
     @include breakpoint(small) {
       @include grid-column(12);
     }
+
   }
+
 }

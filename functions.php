@@ -130,8 +130,8 @@ function remove_menu_items() {
 //	remove_menu_page('edit-comments.php'); // Удаляем пункт "Комментарии"
 //	remove_menu_page( 'index.php' );                  // Консоль
 //	remove_menu_page( 'edit.php' );                   // Записи
-//	remove_submenu_page( 'edit.php', 'edit-tags.php?taxonomy=category' ); // Рубрики
-//	remove_submenu_page( 'edit.php', 'edit-tags.php?taxonomy=post_tag' ); // Метки
+	remove_submenu_page( 'edit.php', 'edit-tags.php?taxonomy=category' ); // Рубрики
+	remove_submenu_page( 'edit.php', 'edit-tags.php?taxonomy=post_tag' ); // Метки
 //	remove_menu_page( 'upload.php' );                 // Медиафайлы
 //	remove_menu_page( 'edit.php?post_type=page' );    // Страницы
 //	remove_menu_page( 'themes.php' );                 // Внешний вид

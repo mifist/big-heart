@@ -5,7 +5,6 @@
 /**
  * OffCanvas module.
  * @module foundation.offcanvas
- * @requires foundation.util.keyboard
  * @requires foundation.util.mediaQuery
  * @requires foundation.util.triggers
  * @requires foundation.util.motion
@@ -45,35 +44,33 @@ class OffCanvas {
 
     this.$element.attr('aria-hidden', 'true');
 
-    this.$element.addClass(`is-transition-${this.options.transition}`);
-
     // Find triggers that affect this element and add aria-expanded to them
     this.$triggers = $(document)
       .find('[data-open="'+id+'"], [data-close="'+id+'"], [data-toggle="'+id+'"]')
       .attr('aria-expanded', 'false')
       .attr('aria-controls', id);
 
-    // Add an overlay over the content if necessary
-    if (this.options.contentOverlay === true) {
-      var overlay = document.createElement('div');
-      var overlayPosition = $(this.$element).css("position") === 'fixed' ? 'is-overlay-fixed' : 'is-overlay-absolute';
-      overlay.setAttribute('class', 'js-off-canvas-overlay ' + overlayPosition);
-      this.$overlay = $(overlay);
-      if(overlayPosition === 'is-overlay-fixed') {
-        $('body').append(this.$overlay);
+    // Add a close trigger over the body if necessary
+    if (this.options.closeOnClick) {
+      if ($('.js-off-canvas-exit').length) {
+        this.$exiter = $('.js-off-canvas-exit');
       } else {
-        this.$element.siblings('[data-off-canvas-content]').append(this.$overlay);
+        var exiter = document.createElement('div');
+        exiter.setAttribute('class', 'js-off-canvas-exit');
+        $('[data-off-canvas-content]').append(exiter);
+
+        this.$exiter = $(exiter);
       }
     }
 
     this.options.isRevealed = this.options.isRevealed || new RegExp(this.options.revealClass, 'g').test(this.$element[0].className);
 
-    if (this.options.isRevealed === true) {
+    if (this.options.isRevealed) {
       this.options.revealOn = this.options.revealOn || this.$element[0].className.match(/(reveal-for-medium|reveal-for-large)/g)[0].split('-')[2];
       this._setMQChecker();
     }
-    if (!this.options.transitionTime === true) {
-      this.options.transitionTime = parseFloat(window.getComputedStyle($('[data-off-canvas]')[0]).transitionDuration) * 1000;
+    if (!this.options.transitionTime) {
+      this.options.transitionTime = parseFloat(window.getComputedStyle($('[data-off-canvas-wrapper]')[0]).transitionDuration) * 1000;
     }
   }
 
@@ -90,9 +87,8 @@ class OffCanvas {
       'keydown.zf.offcanvas': this._handleKeyboard.bind(this)
     });
 
-    if (this.options.closeOnClick === true) {
-      var $target = this.options.contentOverlay ? this.$overlay : $('[data-off-canvas-content]');
-      $target.on({'click.zf.offcanvas': this.close.bind(this)});
+    if (this.options.closeOnClick && this.$exiter.length) {
+      this.$exiter.on({'click.zf.offcanvas': this.close.bind(this)});
     }
   }
 
@@ -126,61 +122,26 @@ class OffCanvas {
     if (isRevealed) {
       this.close();
       this.isRevealed = true;
-      this.$element.attr('aria-hidden', 'false');
+      // if (!this.options.forceTop) {
+      //   var scrollPos = parseInt(window.pageYOffset);
+      //   this.$element[0].style.transform = 'translate(0,' + scrollPos + 'px)';
+      // }
+      // if (this.options.isSticky) { this._stick(); }
       this.$element.off('open.zf.trigger toggle.zf.trigger');
       if ($closer.length) { $closer.hide(); }
     } else {
       this.isRevealed = false;
-      this.$element.attr('aria-hidden', 'true');
-      this.$element.off('open.zf.trigger toggle.zf.trigger').on({
+      // if (this.options.isSticky || !this.options.forceTop) {
+      //   this.$element[0].style.transform = '';
+      //   $(window).off('scroll.zf.offcanvas');
+      // }
+      this.$element.on({
         'open.zf.trigger': this.open.bind(this),
         'toggle.zf.trigger': this.toggle.bind(this)
       });
       if ($closer.length) {
         $closer.show();
       }
-    }
-  }
-
-  /**
-   * Stops scrolling of the body when offcanvas is open on mobile Safari and other troublesome browsers.
-   * @private
-   */
-  _stopScrolling(event) {
-    return false;
-  }
-
-  // Taken and adapted from http://stackoverflow.com/questions/16889447/prevent-full-page-scrolling-ios
-  // Only really works for y, not sure how to extend to x or if we need to.
-  _recordScrollable(event) {
-    let elem = this; // called from event handler context with this as elem
-
-     // If the element is scrollable (content overflows), then...
-    if (elem.scrollHeight !== elem.clientHeight) {
-      // If we're at the top, scroll down one pixel to allow scrolling up
-      if (elem.scrollTop === 0) {
-        elem.scrollTop = 1;
-      }
-      // If we're at the bottom, scroll up one pixel to allow scrolling down
-      if (elem.scrollTop === elem.scrollHeight - elem.clientHeight) {
-        elem.scrollTop = elem.scrollHeight - elem.clientHeight - 1;
-      }
-    }
-    elem.allowUp = elem.scrollTop > 0;
-    elem.allowDown = elem.scrollTop < (elem.scrollHeight - elem.clientHeight);
-    elem.lastY = event.originalEvent.pageY;
-  }
-
-  _stopScrollPropagation(event) {
-    let elem = this; // called from event handler context with this as elem
-    let up = event.pageY < elem.lastY;
-    let down = !up;
-    elem.lastY = event.pageY;
-
-    if((up && elem.allowUp) || (down && elem.allowDown)) {
-      event.stopPropagation();
-    } else {
-      event.preventDefault();
     }
   }
 
@@ -193,60 +154,107 @@ class OffCanvas {
    */
   open(event, trigger) {
     if (this.$element.hasClass('is-open') || this.isRevealed) { return; }
-    var _this = this;
+    var _this = this,
+        $body = $(document.body);
 
-    if (trigger) {
-      this.$lastTrigger = trigger;
+    if (this.options.forceTop) {
+      $('body').scrollTop(0);
     }
+    // window.pageYOffset = 0;
 
-    if (this.options.forceTo === 'top') {
-      window.scrollTo(0, 0);
-    } else if (this.options.forceTo === 'bottom') {
-      window.scrollTo(0,document.body.scrollHeight);
-    }
-
+    // if (!this.options.forceTop) {
+    //   var scrollPos = parseInt(window.pageYOffset);
+    //   this.$element[0].style.transform = 'translate(0,' + scrollPos + 'px)';
+    //   if (this.$exiter.length) {
+    //     this.$exiter[0].style.transform = 'translate(0,' + scrollPos + 'px)';
+    //   }
+    // }
     /**
      * Fires when the off-canvas menu opens.
      * @event OffCanvas#opened
      */
+
+    var $wrapper = $('[data-off-canvas-wrapper]');
+    $wrapper.addClass('is-off-canvas-open is-open-'+ _this.options.position);
+
     _this.$element.addClass('is-open')
+
+      // if (_this.options.isSticky) {
+      //   _this._stick();
+      // }
 
     this.$triggers.attr('aria-expanded', 'true');
     this.$element.attr('aria-hidden', 'false')
         .trigger('opened.zf.offcanvas');
 
-    // If `contentScroll` is set to false, add class and disable scrolling on touch devices.
-    if (this.options.contentScroll === false) {
-      $('body').addClass('is-off-canvas-open').on('touchmove', this._stopScrolling);
-      this.$element.on('touchstart', this._recordScrollable);
-      this.$element.on('touchmove', this._stopScrollPropagation);
+    if (this.options.closeOnClick) {
+      this.$exiter.addClass('is-visible');
     }
 
-    if (this.options.contentOverlay === true) {
-      this.$overlay.addClass('is-visible');
+    if (trigger) {
+      this.$lastTrigger = trigger;
     }
 
-    if (this.options.closeOnClick === true && this.options.contentOverlay === true) {
-      this.$overlay.addClass('is-closable');
-    }
-
-    if (this.options.autoFocus === true) {
-      this.$element.one(Foundation.transitionend(this.$element), function() {
-        var canvasFocus = _this.$element.find('[data-autofocus]');
-        if (canvasFocus.length) {
-            canvasFocus.eq(0).focus();
-        } else {
-            _this.$element.find('a, button').eq(0).focus();
+    if (this.options.autoFocus) {
+      $wrapper.one(Foundation.transitionend($wrapper), function() {
+        if(_this.$element.hasClass('is-open')) { // handle double clicks
+          _this.$element.attr('tabindex', '-1');
+          _this.$element.focus();
         }
       });
     }
 
-    if (this.options.trapFocus === true) {
-      this.$element.siblings('[data-off-canvas-content]').attr('tabindex', '-1');
-      Foundation.Keyboard.trapFocus(this.$element);
+    if (this.options.trapFocus) {
+      $wrapper.one(Foundation.transitionend($wrapper), function() {
+        if(_this.$element.hasClass('is-open')) { // handle double clicks
+          _this.$element.attr('tabindex', '-1');
+          _this.trapFocus();
+        }
+      });
     }
   }
 
+  /**
+   * Traps focus within the offcanvas on open.
+   * @private
+   */
+  _trapFocus() {
+    var focusable = Foundation.Keyboard.findFocusable(this.$element),
+        first = focusable.eq(0),
+        last = focusable.eq(-1);
+
+    focusable.off('.zf.offcanvas').on('keydown.zf.offcanvas', function(e) {
+      var key = Foundation.Keyboard.parseKey(e);
+      if (key === 'TAB' && e.target === last[0]) {
+        e.preventDefault();
+        first.focus();
+      }
+      if (key === 'SHIFT_TAB' && e.target === first[0]) {
+        e.preventDefault();
+        last.focus();
+      }
+    });
+  }
+
+  /**
+   * Allows the offcanvas to appear sticky utilizing translate properties.
+   * @private
+   */
+  // OffCanvas.prototype._stick = function() {
+  //   var elStyle = this.$element[0].style;
+  //
+  //   if (this.options.closeOnClick) {
+  //     var exitStyle = this.$exiter[0].style;
+  //   }
+  //
+  //   $(window).on('scroll.zf.offcanvas', function(e) {
+  //     console.log(e);
+  //     var pageY = window.pageYOffset;
+  //     elStyle.transform = 'translate(0,' + pageY + 'px)';
+  //     if (exitStyle !== undefined) { exitStyle.transform = 'translate(0,' + pageY + 'px)'; }
+  //   });
+  //   // this.$element.trigger('stuck.zf.offcanvas');
+  // };
   /**
    * Closes the off-canvas menu.
    * @function
@@ -258,35 +266,30 @@ class OffCanvas {
 
     var _this = this;
 
+    //  Foundation.Move(this.options.transitionTime, this.$element, function() {
+    $('[data-off-canvas-wrapper]').removeClass(`is-off-canvas-open is-open-${_this.options.position}`);
     _this.$element.removeClass('is-open');
-
+      // Foundation._reflow();
+    // });
     this.$element.attr('aria-hidden', 'true')
       /**
        * Fires when the off-canvas menu opens.
        * @event OffCanvas#closed
        */
         .trigger('closed.zf.offcanvas');
-
-    // If `contentScroll` is set to false, remove class and re-enable scrolling on touch devices.
-    if (this.options.contentScroll === false) {
-      $('body').removeClass('is-off-canvas-open').off('touchmove', this._stopScrolling);
-      this.$element.off('touchstart', this._recordScrollable);
-      this.$element.off('touchmove', this._stopScrollPropagation);
-    }
-
-    if (this.options.contentOverlay === true) {
-      this.$overlay.removeClass('is-visible');
-    }
-
-    if (this.options.closeOnClick === true && this.options.contentOverlay === true) {
-      this.$overlay.removeClass('is-closable');
+    // if (_this.options.isSticky || !_this.options.forceTop) {
+    //   setTimeout(function() {
+    //     _this.$element[0].style.transform = '';
+    //     $(window).off('scroll.zf.offcanvas');
+    //   }, this.options.transitionTime);
+    // }
+    if (this.options.closeOnClick) {
+      this.$exiter.removeClass('is-visible');
     }
 
     this.$triggers.attr('aria-expanded', 'false');
-
-    if (this.options.trapFocus === true) {
-      this.$element.siblings('[data-off-canvas-content]').removeAttr('tabindex');
-      Foundation.Keyboard.releaseFocus(this.$element);
+    if (this.options.trapFocus) {
+      $('[data-off-canvas-content]').removeAttr('tabindex');
     }
   }
 
@@ -331,7 +334,7 @@ class OffCanvas {
   destroy() {
     this.close();
     this.$element.off('.zf.trigger .zf.offcanvas');
-    this.$overlay.off('.zf.offcanvas');
+    this.$exiter.off('.zf.offcanvas');
 
     Foundation.unregisterPlugin(this);
   }
@@ -341,89 +344,64 @@ OffCanvas.defaults = {
   /**
    * Allow the user to click outside of the menu to close it.
    * @option
-   * @type {boolean}
-   * @default true
+   * @example true
    */
   closeOnClick: true,
 
   /**
-   * Adds an overlay on top of `[data-off-canvas-content]`.
-   * @option
-   * @type {boolean}
-   * @default true
-   */
-  contentOverlay: true,
-
-  /**
-   * Enable/disable scrolling of the main content when an off canvas panel is open.
-   * @option
-   * @type {boolean}
-   * @default true
-   */
-  contentScroll: true,
-
-  /**
    * Amount of time in ms the open and close transition requires. If none selected, pulls from body style.
    * @option
-   * @type {number}
-   * @default 0
+   * @example 500
    */
   transitionTime: 0,
 
   /**
-   * Type of transition for the offcanvas menu. Options are 'push', 'detached' or 'slide'.
+   * Direction the offcanvas opens from. Determines class applied to body.
    * @option
-   * @type {string}
-   * @default push
+   * @example left
    */
-  transition: 'push',
+  position: 'left',
 
   /**
-   * Force the page to scroll to top or bottom on open.
+   * Force the page to scroll to top on open.
    * @option
-   * @type {?string}
-   * @default null
+   * @example true
    */
-  forceTo: null,
+  forceTop: true,
 
   /**
    * Allow the offcanvas to remain open for certain breakpoints.
    * @option
-   * @type {boolean}
-   * @default false
+   * @example false
    */
   isRevealed: false,
 
   /**
    * Breakpoint at which to reveal. JS will use a RegExp to target standard classes, if changing classnames, pass your class with the `revealClass` option.
    * @option
-   * @type {?string}
-   * @default null
+   * @example reveal-for-large
    */
   revealOn: null,
 
   /**
-   * Force focus to the offcanvas on open. If true, will focus the opening trigger on close.
+   * Force focus to the offcanvas on open. If true, will focus the opening trigger on close. Sets tabindex of [data-off-canvas-content] to -1 for accessibility purposes.
    * @option
-   * @type {boolean}
-   * @default true
+   * @example true
    */
   autoFocus: true,
 
   /**
    * Class used to force an offcanvas to remain open. Foundation defaults for this are `reveal-for-large` & `reveal-for-medium`.
    * @option
-   * @type {string}
-   * @default reveal-for-
-   * @todo improve the regex testing for this.
+   * TODO improve the regex testing for this.
+   * @example reveal-for-large
    */
   revealClass: 'reveal-for-',
 
   /**
    * Triggers optional focus trapping when opening an offcanvas. Sets tabindex of [data-off-canvas-content] to -1 for accessibility purposes.
    * @option
-   * @type {boolean}
-   * @default false
+   * @example true
    */
   trapFocus: false
 }

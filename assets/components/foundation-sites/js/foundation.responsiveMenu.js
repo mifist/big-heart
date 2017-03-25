@@ -7,6 +7,9 @@
  * @module foundation.responsiveMenu
  * @requires foundation.util.triggers
  * @requires foundation.util.mediaQuery
+ * @requires foundation.util.accordionMenu
+ * @requires foundation.util.drilldown
+ * @requires foundation.util.dropdown-menu
  */
 
 class ResponsiveMenu {
@@ -59,8 +62,6 @@ class ResponsiveMenu {
     if (!$.isEmptyObject(this.rules)) {
       this._checkMediaQueries();
     }
-    // Add data-mutate since children may need it.
-    this.$element.attr('data-mutate', (this.$element.attr('data-mutate') || Foundation.GetYoDigits(6, 'responsive-menu')));
   }
 
   /**
