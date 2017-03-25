@@ -167,7 +167,7 @@ ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
             </article>
 	    <?php endwhile; ?><!-- END of Post -->
 	<?php endif; ?>
-    <div class="pagination"><?php echo foundation_pagination(); ?></div><!-- END of .pagination -->
+    <div class="pagination"><?php echo foundationpress_pagination(); ?></div><!-- END of .pagination -->
 
 
 // How To Display ACF Gallery

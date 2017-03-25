@@ -29,12 +29,12 @@
 
 	<?php elseif ( is_search() ) : ?>
 
-	<p><?php _e( 'Sorry, but nothing matched your search terms. Please try again with some different keywords.', 'foundationpress' ); ?></p>
+	<p><?php _e( 'К сожалению, ничего не найдено. Пожалуйста, попытайтесь снова с другими ключевыми словами.', 'foundationpress' ); ?></p>
 	<?php get_search_form(); ?>
 
 	<?php else : ?>
 
-	<p><?php _e( 'It seems we can&rsquo;t find what you&rsquo;re looking for. Perhaps searching can help.', 'foundationpress' ); ?></p>
+	<p><?php _e( 'Похоже, мы не можем найти то, что вы ищете. Возможно, поиск может помочь.', 'foundationpress' ); ?></p>
 	<?php get_search_form(); ?>
 
 	<?php endif; ?>

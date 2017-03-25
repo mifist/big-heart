@@ -155,6 +155,7 @@
 		$(".cpf").mask("999.999.999-99");
 		$(".cnpj").mask("99.999.999/9999-99");
 		
+		
 		// Add fancybox to images
 		var $img;
 		if ($img = $('img[class*="wp-image"]')) {
@@ -193,6 +194,20 @@
 				}
 			}
 		});
+		
+		$('.jt-portfolio-filter a').click(function(e) {
+			e.preventDefault();
+			var $category = $(this).data('category');
+			var $portfolioItems = $('.jt-portfolio-grid .jt-portfolio-item');
+			$('.jt-portfolio-filter a').removeClass('active');
+			$(this).addClass('active');
+			$portfolioItems.hide();
+			$('.jt-portfolio-grid .jt-portfolio-item' + '.' + $category).show();
+			if($category == 'all'){
+				$portfolioItems.show();
+			}
+		});
+		
 		
 	});
 	
