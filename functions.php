@@ -36,6 +36,9 @@ require_once('library/class-foundationpress-mobile-walker.php');
 /** Create widget areas in sidebar and footer */
 require_once('library/widget-areas.php');
 
+/** Create post type*/
+require_once('library/post_type-areas.php');
+
 /** Return entry meta information for posts */
 require_once('library/entry-meta.php');
 
