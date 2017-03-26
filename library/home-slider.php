@@ -12,15 +12,40 @@ function home_slider_template() { ?>
                 <?php // if (get_field('home_slider_slide_speed', 'option')) { echo 'slideshowSpeed:' . get_field('home_slider_slide_speed', 'option') . ',' ;} ?>		// Change to any integrer for example autoPlay : 5000 to play every 5 seconds.
                 // For Developers
                 cssEase: 'ease',
-                fade: true,
+                fade: false,
                 arrows: true,
                 dots: true,
                 infinite: true,
                 speed: 500,
                 autoplay: true,
                 autoplaySpeed: 3000,
-                slidesToShow: 1,
-                slidesToScroll: 1
+                slidesToShow: 4,
+                slidesToScroll: 1,
+	            responsive: [
+		            {
+			            breakpoint: 1024,
+			            settings: {
+				            arrows: true,
+				            slidesToShow: 3
+			            }
+		            },
+		            {
+			            breakpoint: 768,
+			            settings: {
+				            arrows: true,
+				            dots: false,
+				            slidesToShow: 1
+			            }
+		            },
+		            {
+			            breakpoint: 480,
+			            settings: {
+				            arrows: false,
+				            dots: false,
+				            slidesToShow: 1
+			            }
+		            }
+	            ]
             });
 
         });
@@ -28,7 +53,7 @@ function home_slider_template() { ?>
 
 
    <?php $arg = array(
-        'post_type'	        => 'slider',
+        'post_type'	        => 'dog_list',
         'order'		        => 'ASC',
         'orderby'	        => 'menu_order',
         'posts_per_page'    => -1
@@ -43,7 +68,6 @@ function home_slider_template() { ?>
                     <?php the_post_thumbnail(); ?>
                     <div class="slider-caption">
                         <h3><?php the_title(); ?></h3>
-                        <?php the_content(); ?>
                     </div>
                 </div>
 
