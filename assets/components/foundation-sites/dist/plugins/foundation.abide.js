@@ -213,8 +213,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
       }
 
       /**
-       * Remove CSS error classes etc from an entire radio button group
-       * @param {String} groupName - A string that specifies the name of a radio button group
+       * Remove CSS error classes etc from an entire radio modal-image group
+       * @param {String} groupName - A string that specifies the name of a radio modal-image group
        *
        */
 

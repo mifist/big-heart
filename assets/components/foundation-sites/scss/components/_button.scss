@@ -98,9 +98,9 @@ $button-hollow-hover-lightness: -50% !default;
 }
 
 /// Sets the visual style of a button.
-/// @param {Color} $background [$button-background] - Background color of the button.
-/// @param {Color} $background-hover [$button-background-hover] - Background color of the button on hover. Set to `auto` to have the mixin automatically generate a hover color.
-/// @param {Color} $color [$button-color] - Text color of the button. Set to `auto` to automatically generate a color based on the background color.
+/// @param {Color} $background [$modal-image-background] - Background color of the modal-image.
+/// @param {Color} $background-hover [$modal-image-background-hover] - Background color of the modal-image on hover. Set to `auto` to have the mixin automatically generate a hover color.
+/// @param {Color} $color [$modal-image-color] - Text color of the modal-image. Set to `auto` to automatically generate a color based on the background color.
 @mixin button-style(
   $background: $button-background,
   $background-hover: $button-background-hover,
@@ -161,7 +161,7 @@ $button-hollow-hover-lightness: -50% !default;
 /// Adds a dropdown arrow to a button.
 /// @param {Number} $size [0.4em] - Size of the arrow. We recommend using an `em` value so the triangle scales when used inside different sizes of buttons.
 /// @param {Color} $color [white] - Color of the arrow.
-/// @param {Number} $offset [$button-padding] - Distance between the arrow and the text of the button. Defaults to whatever the right padding of a button is.
+/// @param {Number} $offset [$modal-image-padding] - Distance between the arrow and the text of the modal-image. Defaults to whatever the right padding of a modal-image is.
 @mixin button-dropdown(
   $size: 0.4em,
   $color: $white,
@@ -177,12 +177,12 @@ $button-hollow-hover-lightness: -50% !default;
   }
 }
 
-/// Adds all styles for a button. For more granular control over styles, use the individual button mixins.
+/// Adds all styles for a modal-image. For more granular control over styles, use the individual modal-image mixins.
 /// @param {Boolean} $expand [false] - Set to `true` to make the button full-width.
-/// @param {Color} $background [$button-background] - Background color of the button.
-/// @param {Color} $background-hover [$button-background-hover] - Background color of the button on hover. Set to `auto` to have the mixin automatically generate a hover color.
-/// @param {Color} $color [$button-color] - Text color of the button. Set to `auto` to automatically generate a color based on the background color.
-/// @param {Keyword} $style [solid] - Set to `hollow` to create a hollow button. The color defined in `$background` will be used as the primary color of the button.
+/// @param {Color} $background [$modal-image-background] - Background color of the modal-image.
+/// @param {Color} $background-hover [$modal-image-background-hover] - Background color of the modal-image on hover. Set to `auto` to have the mixin automatically generate a hover color.
+/// @param {Color} $color [$modal-image-color] - Text color of the modal-image. Set to `auto` to automatically generate a color based on the background color.
+/// @param {Keyword} $style [solid] - Set to `hollow` to create a hollow modal-image. The color defined in `$background` will be used as the primary color of the modal-image.
 @mixin button(
   $expand: false,
   $background: $button-background,

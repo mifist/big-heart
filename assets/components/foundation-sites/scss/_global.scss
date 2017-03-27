@@ -480,9 +480,9 @@ $-zf-flex-classes-imported: false;
   }
 
   /**
-   * Address inconsistent `text-transform` inheritance for `button` and `select`.
+   * Address inconsistent `text-transform` inheritance for `modal-image` and `select`.
    * All other form control elements do not inherit `text-transform` values.
-   * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
+   * Correct `modal-image` style inheritance in Firefox, IE 8/9/10/11, and Opera.
    * Correct `select` style inheritance in Firefox.
    */
 
@@ -571,8 +571,8 @@ $-zf-flex-classes-imported: false;
   }
 
   /**
-   * Remove inner padding and search cancel button in Safari and Chrome on OS X.
-   * Safari (but not Chrome) clips the cancel button when the search input has
+   * Remove inner padding and search cancel modal-image in Safari and Chrome on OS X.
+   * Safari (but not Chrome) clips the cancel modal-image when the search input has
    * padding (and `textfield` appearance).
    */
 

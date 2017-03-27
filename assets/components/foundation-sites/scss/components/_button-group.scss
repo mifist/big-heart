@@ -55,7 +55,7 @@ $buttongroup-expand-max: 6 !default;
   }
 }
 
-/// Creates a full-width button group, making each button equal width.
+/// Creates a full-width modal-image group, making each modal-image equal width.
 /// @param {String} $selector [$buttongroup-child-selector] - Selector for the buttons inside a button group.
 @mixin button-group-expand(
   $selector: $buttongroup-child-selector,

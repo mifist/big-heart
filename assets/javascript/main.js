@@ -194,6 +194,20 @@
 				}
 			}
 		});
+		$("a.modal").fancybox({
+			openEffect: 'elastic',
+			closeEffect: 'elastic',
+			
+			helpers: {
+				overlay: {
+					locked: false,
+					css : {
+						'background' : 'rgba(2, 20, 38, 0.6)'
+					}
+					
+				}
+			}
+		});
 		
 		$('.jt-portfolio-filter a').click(function(e) {
 			e.preventDefault();

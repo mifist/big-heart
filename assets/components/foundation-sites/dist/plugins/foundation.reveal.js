@@ -372,7 +372,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
             open: function () {
               if (_this.$element.find(':focus').is(_this.$element.find('[data-close]'))) {
                 setTimeout(function () {
-                  // set focus back to anchor if close button has been activated
+                  // set focus back to anchor if close modal-image has been activated
                   _this.$anchor.focus();
                 }, 1);
               } else if ($target.is(_this.focusableElements)) {
