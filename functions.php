@@ -50,12 +50,22 @@ require_once('library/theme-support.php');
 
 /** Add Nav Options to Customer */
 require_once('library/custom-nav.php');
+require_once('library/custom-admin.php');
 
 /** Change WP's sticky post class */
 require_once('library/sticky-posts.php');
 
 /** Configure responsive image sizes */
 require_once('library/responsive-images.php');
+/**
+ * Custom functions that act independently of the theme templates.
+ */
+require_once('library/extras.php');
+
+/**
+ * Load hooks.
+ */
+require_once('library/hooks.php');
 
 /** If your site requires protocol relative url's for theme assets, uncomment the line below */
 // require_once( 'library/class-foundationpress-protocol-relative-theme-assets.php' );
@@ -80,29 +90,41 @@ require_once('library/home-slider.php');
  */
 
 /**
- * Custom template tags for this theme.
+ * Set the content width in pixels, based on the theme's design and stylesheet.
+ *
+ * Priority 0 to make it available to lower priority callbacks.
+ *
+ * @global int $content_width
  */
-//require_once( 'inc/template-tags.php' );
+function step_by_step_development_theme_unyson_content_width() {
+	$GLOBALS['content_width'] = apply_filters( 'step_by_step_development_theme_unyson_content_width', 640 );
+}
+add_action( 'after_setup_theme', 'step_by_step_development_theme_unyson_content_width', 0 );
+
+
+
+
 
 /**
- * Custom functions that act independently of the theme templates.
+ * Custom template tags for this theme.
  */
-//require_once( 'inc/extras.php' );
+require get_template_directory() . '/inc/template-tags.php';
+
 
 /**
  * Customizer additions.
  */
-//require_once( 'inc/customizer.php' );
+require get_template_directory() . '/inc/customizer.php';
 
-/**
- * Load Jetpack compatibility file.
- */
-//require_once( 'inc/jetpack.php' );
 
-/**
- * Load hooks.
- */
-//require_once( 'inc/hooks.php' );
+
+
+
+
+
+/*********************** PUT YOU FUNCTIONS BELOW ********************************/
+
+add_image_size( 'slide_full', 750, 1024, array('center','center'));
 
 
 // ACF Pro Options Page
@@ -119,74 +141,8 @@ if( function_exists('acf_add_options_page') ) {
 
 
 
-/*********************** PUT YOU FUNCTIONS BELOW ********************************/
-
-add_image_size( 'slide_full', 750, 1024, array('center','center'));
 
 
-// Скрываем пункты меню в админ панели
-function remove_menu_items() {
-	// тут мы укахываем ярлык пункты который удаляем.
-//	remove_menu_page('edit-comments.php'); // Удаляем пункт "Комментарии"
-//	remove_menu_page( 'index.php' );                  // Консоль
-//	remove_menu_page( 'edit.php' );                   // Записи
-	remove_submenu_page( 'edit.php', 'edit-tags.php?taxonomy=category' ); // Рубрики
-	remove_submenu_page( 'edit.php', 'edit-tags.php?taxonomy=post_tag' ); // Метки
-//	remove_menu_page( 'upload.php' );                 // Медиафайлы
-//	remove_menu_page( 'edit.php?post_type=page' );    // Страницы
-//	remove_menu_page( 'themes.php' );                 // Внешний вид
-//	remove_menu_page( 'plugins.php' );                // Плагины
-//	remove_menu_page( 'users.php' );                  // Пользователи
-//	remove_menu_page( 'tools.php' );                  // Инструменты
-//	remove_menu_page( 'options-general.php' );        // Настройки
-//	remove_menu_page( 'edit.php?post_type=acf-field-group' ); // ACF
-//	remove_menu_page( 'cptui_manage_post_types' ); // CPTU
-//	remove_menu_page( 'admin.php?page=duplicator' ); // Duplicator
-//	remove_menu_page( 'wpcf7' ); // Contact form 7
-//	remove_submenu_page( 'options-general.php', 'options-permalink.php' ); // Параметры->Постоянные ссылки
-//	remove_submenu_page( 'options-general.php', 'options-reading.php' ); // Параметры->Чтение
-//	remove_submenu_page( 'options-general.php', 'options-writing.php' ); // Параметры->Написание
-//	remove_submenu_page( 'options-general.php', 'acf-qtranslate' ); // acf for qtranslate x
-//	remove_submenu_page( 'options-general.php', 'qtranslate-x' ); // qtranslate x
-//	remove_submenu_page( 'options-general.php', 'akismet-key-config' ); // akismet
-}
-add_action( 'admin_menu', 'remove_menu_items' );
-
-
-// Ограничение символов в h1 - h6
-function trim_title_chars($count, $after) {
-	$title = get_the_title();
-	if (mb_strlen($title) > $count) $title = mb_substr($title,0,$count);
-	else $after = '';
-	echo $title . $after;
-}
-function trim_title_sub_field($count, $after) {
-	$title = get_sub_field('service_title');
-	if (mb_strlen($title) > $count) $title = mb_substr($title,0,$count);
-	else $after = '';
-	echo $title . $after;
-}
-//trim_title_chars(27, '...');
-
-/*
-*
- *  ЗАЩИТА АДМИНКИ И РЕДИРЕКТЫ
-*
-*/
-
-
-/*редирект wp-admin wp-login admission.php*/
-function kama_login_redirect(){
-	if( strpos($_SERVER['REQUEST_URI'], 'admission')!==false )
-		$loc = '/admission.php';
-	elseif( strpos($_SERVER['REQUEST_URI'], 'admin')!==false )
-		$loc = '/admission.php';
-	if( $loc ){
-		header( 'Location: '.get_option('site_url').$loc, true, 303 );
-		exit;
-	}
-}
-add_action('template_redirect', 'kama_login_redirect');
 
 
 

@@ -42,7 +42,7 @@ msgid "Return to the <a href=\"%s\">home page</a>"
 msgstr ""
 
 #: 404.php:18
-msgid "Click the <a href=\"javascript:history.back()\">Back</a> button"
+msgid "Click the <a href=\"javascript:history.back()\">Back</a> modal-image"
 msgstr ""
 
 #. /previous pages when applicable
